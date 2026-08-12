@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calendar</title>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 14.28%; /* 100% / 7 days */
+                text-align: center;
+                padding: 10px;
+            }
+            th {
+                background-color: #584083;
+            }</style>
+    </head>
+    <body>
+        <h1>Calendar</h1>
+        <div id="calendar"></div>
+
+        <script>
+            function generateCalendar(year, month) {
+                const calendarDiv = document.getElementById('calendar');
+                calendarDiv.innerHTML = ''; // Clear previous calendar
+
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                let table = '<table border="1"><tr>';
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                // Add days of the week header
+                for (let day of daysOfWeek) {
+                    table += `<th>${day}</th>`;
+                }
+                table += '</tr><tr>';
+
+                // Add empty cells for days before the first day of the month
+                for (let i = 0; i < firstDay; i++) {
+                    table += '<td></td>';
+                }
+
+                // Add days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    if ((firstDay + day - 1) % 7 === 0 && day !== 1) {
+                        table += '</tr><tr>'; // Start a new row every week
+                    }
+                    table += `<td>${day}</td>`;
+                }
+
+                // Fill in the remaining cells of the last week
+                const remainingCells = (7 - (firstDay + daysInMonth) % 7) % 7;
+                for (let i = 0; i < remainingCells; i++) {
+                    table += '<td></td>';
+                }
+
+                table += '</tr></table>';
+                calendarDiv.innerHTML = table;
+            }
+
+            // Generate calendar for the current month and year
+            const today = new Date();
+            generateCalendar(today.getFullYear(), today.getMonth());
+        </script>
+    </body>
+</html>
